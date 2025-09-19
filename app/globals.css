@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary-950 text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-800 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+  }
+  
+  .btn-secondary {
+    @apply bg-white text-primary-950 border border-primary-200 px-6 py-3 rounded-lg font-medium hover:bg-gray-50 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+  }
+  
+  .card {
+    @apply bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200;
+  }
+  
+  .code-block {
+    @apply bg-gray-900 text-gray-100 rounded-lg p-4 font-mono text-sm overflow-x-auto;
+  }
+  
+  .api-endpoint {
+    @apply bg-gray-50 border border-gray-200 rounded-lg p-4 font-mono text-sm;
+  }
+  
+  .status-badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+  
+  .status-success {
+    @apply bg-green-100 text-green-800;
+  }
+  
+  .status-warning {
+    @apply bg-yellow-100 text-yellow-800;
+  }
+  
+  .status-error {
+    @apply bg-red-100 text-red-800;
+  }
+  
+  .status-info {
+    @apply bg-blue-100 text-blue-800;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Syntax highlighting */
+.hljs {
+  background: #1e1e1e !important;
+  color: #d4d4d4 !important;
+}
+
+.hljs-keyword {
+  color: #569cd6 !important;
+}
+
+.hljs-string {
+  color: #ce9178 !important;
+}
+
+.hljs-number {
+  color: #b5cea8 !important;
+}
+
+.hljs-comment {
+  color: #6a9955 !important;
+}
+
+.hljs-function {
+  color: #dcdcaa !important;
+}
+
+.hljs-variable {
+  color: #9cdcfe !important;
+}
