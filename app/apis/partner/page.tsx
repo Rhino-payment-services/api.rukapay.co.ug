@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ArrowRight, Shield, Zap, Users, Code, ExternalLink } from 'lucide-react'
+import { ArrowRight, Shield, Zap, Users, Code } from 'lucide-react'
 import CodeExample from '@/components/CodeExample'
 import EndpointCard from '@/components/EndpointCard'
 

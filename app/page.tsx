@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ArrowRight, Shield, Zap, Globe, Code, Users, CheckCircle } from 'lucide-react'
+import { ArrowRight, Shield, Zap, Globe, Code, Users } from 'lucide-react'
 import ApiCard from '@/components/ApiCard'
 
 const HomePage = () => {

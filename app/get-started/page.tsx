@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ArrowRight, CheckCircle, Copy, ExternalLink, Key, Shield, Zap } from 'lucide-react'
+import { ArrowRight, CheckCircle, ExternalLink, Key, Shield, Zap } from 'lucide-react'
 import InteractiveArrow from '@/components/InteractiveArrow'
 
 const GetStartedPage = () => {
@@ -106,7 +106,7 @@ const GetStartedPage = () => {
             </h1>
             <p className="text-xl text-gray-200 mb-8 max-w-3xl mx-auto">
               Start building with our comprehensive payment APIs in just a few simple steps. 
-              From account creation to production deployment, we've got you covered.
+              From account creation to production deployment, we&apos;ve got you covered.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/contact" className="inline-flex items-center px-8 py-4 bg-white text-primary-950 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-colors duration-200 shadow-lg hover:shadow-xl">

@@ -502,26 +502,6 @@ const TransactionModesPage = () => {
     }
   ]
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'active':
-      case 'operational':
-        return 'bg-green-100 text-green-800'
-      case 'beta':
-      case 'degraded':
-        return 'bg-yellow-100 text-yellow-800'
-      case 'partial_outage':
-        return 'bg-orange-100 text-orange-800'
-      case 'major_outage':
-        return 'bg-red-100 text-red-800'
-      case 'maintenance':
-        return 'bg-blue-100 text-blue-800'
-      case 'deprecated':
-        return 'bg-red-100 text-red-800'
-      default:
-        return 'bg-gray-100 text-gray-800'
-    }
-  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -544,7 +524,7 @@ const TransactionModesPage = () => {
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="space-y-6">
-            {transactionModes.map((mode, index) => (
+            {transactionModes.map((mode) => (
               <CollapsibleCard
                 key={mode.name}
                 title={mode.displayName}
@@ -558,7 +538,7 @@ const TransactionModesPage = () => {
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-3">Mandatory Fields</h3>
                       <div className="space-y-3">
-                        {mode.mandatoryFields.map((field, fieldIndex) => (
+                        {mode.mandatoryFields.map((field) => (
                           <div key={`${mode.name}-mandatory-${field.name}`} className="border border-gray-200 rounded-lg p-3">
                             <div className="flex items-center justify-between mb-1">
                               <span className="font-mono text-sm font-medium text-gray-900">{field.name}</span>
@@ -575,7 +555,7 @@ const TransactionModesPage = () => {
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900 mb-3">Optional Fields</h3>
                         <div className="space-y-3">
-                          {mode.optionalFields.map((field, fieldIndex) => (
+                          {mode.optionalFields.map((field) => (
                             <div key={`${mode.name}-optional-${field.name}`} className="border border-gray-200 rounded-lg p-3">
                               <div className="flex items-center justify-between mb-1">
                                 <span className="font-mono text-sm font-medium text-gray-900">{field.name}</span>
