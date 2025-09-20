@@ -33,7 +33,7 @@ export default function TermsAndConditionsPage() {
                 Agreement to Terms
               </h2>
               <p className="text-gray-700 leading-relaxed">
-                By accessing and using Rukapay's API services, you agree to be bound by these Terms and Conditions. 
+                By accessing and using Rukapay&apos;s API services, you agree to be bound by these Terms and Conditions. 
                 If you do not agree to these terms, please do not use our services. These terms constitute a legally 
                 binding agreement between you and Rukapay Limited.
               </p>
@@ -46,19 +46,19 @@ export default function TermsAndConditionsPage() {
               </h2>
               <div className="space-y-4">
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-2">"API"</h3>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-2">&quot;API&quot;</h3>
                   <p className="text-gray-700">Application Programming Interface provided by Rukapay for financial services integration.</p>
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-2">"Service"</h3>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-2">&quot;Service&quot;</h3>
                   <p className="text-gray-700">All services, features, and functionality provided through our API platform.</p>
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-2">"User" or "You"</h3>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-2">&quot;User&quot; or &quot;You&quot;</h3>
                   <p className="text-gray-700">Any individual or entity that accesses or uses our API services.</p>
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-2">"Account"</h3>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-2">&quot;Account&quot;</h3>
                   <p className="text-gray-700">Your registered account with Rukapay that provides access to API services.</p>
                 </div>
               </div>

@@ -15,7 +15,7 @@ const ContactPage = () => {
           <div className="text-center">
             <h1 className="text-4xl font-bold mb-4">Contact Us</h1>
             <p className="text-xl text-blue-100">
-              Get in touch with our team - we're here to help with all your payment needs
+              Get in touch with our team - we&apos;re here to help with all your payment needs
             </p>
           </div>
         </div>
