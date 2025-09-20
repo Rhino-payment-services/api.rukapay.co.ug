@@ -3,11 +3,10 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Menu, X, ChevronDown } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
 
   const navigation = [
     {
@@ -41,50 +40,13 @@ const Header = () => {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex space-x-8">
             {navigation.map((item) => (
-              <div key={item.name} className="relative">
-                {item.children ? (
-                  <div
-                    className="flex items-center space-x-1 text-gray-700 hover:text-primary-950 cursor-pointer"
-                    onMouseEnter={() => setActiveDropdown(item.name)}
-                    onMouseLeave={() => setActiveDropdown(null)}
-                  >
-                    <span className="font-medium">{item.name}</span>
-                    <ChevronDown className="h-4 w-4" />
-                  </div>
-                ) : (
-                  <Link
-                    href={item.href}
-                    className="text-gray-700 hover:text-primary-950 font-medium"
-                  >
-                    {item.name}
-                  </Link>
-                )}
-
-                {/* Dropdown Menu */}
-                {item.children && activeDropdown === item.name && (
-                  <div
-                    className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50"
-                    onMouseEnter={() => setActiveDropdown(item.name)}
-                    onMouseLeave={() => setActiveDropdown(null)}
-                    style={{ position: 'absolute' }}
-                  >
-                    {item.children.map((child) => (
-                      <Link
-                        key={child.name}
-                        href={child.href}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary-950"
-                      >
-                        <div className="font-medium">{child.name}</div>
-                        {child.description && (
-                          <div className="text-xs text-gray-500 mt-1">
-                            {child.description}
-                          </div>
-                        )}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
+              <Link
+                key={item.name}
+                href={item.href}
+                className="text-gray-700 hover:text-primary-950 font-medium"
+              >
+                {item.name}
+              </Link>
             ))}
           </nav>
 
@@ -125,33 +87,14 @@ const Header = () => {
           <div className="md:hidden absolute top-full left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-40">
             <div className="px-4 py-4 space-y-4">
               {navigation.map((item) => (
-                <div key={item.name}>
-                  {item.children ? (
-                    <div className="space-y-2">
-                      <div className="font-medium text-gray-900">{item.name}</div>
-                      <div className="pl-4 space-y-2">
-                        {item.children.map((child) => (
-                          <Link
-                            key={child.name}
-                            href={child.href}
-                            className="block text-sm text-gray-600 hover:text-primary-950"
-                            onClick={() => setIsMenuOpen(false)}
-                          >
-                            {child.name}
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
-                  ) : (
-                    <Link
-                      href={item.href}
-                      className="block font-medium text-gray-900 hover:text-primary-950"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      {item.name}
-                    </Link>
-                  )}
-                </div>
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className="block font-medium text-gray-900 hover:text-primary-950"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {item.name}
+                </Link>
               ))}
                   <div className="pt-4 border-t border-gray-200 space-y-2">
                     <div className="relative px-4 py-2">

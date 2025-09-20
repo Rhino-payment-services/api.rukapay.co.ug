@@ -24,7 +24,7 @@ interface Method {
   auth: string
   request?: RequestExample
   responses?: {
-    [key: string]: ResponseExample
+    [key: string]: ResponseExample | undefined
   }
 }
 
@@ -159,25 +159,27 @@ const EndpointCard = ({ title, description, baseUrl, methods }: EndpointCardProp
                 <div className="mt-4">
                   <h4 className="text-sm font-semibold text-gray-900 mb-3">Response Examples</h4>
                   <div className="space-y-3">
-                    {Object.entries(method.responses).map(([key, response]) => (
+                    {Object.entries(method.responses)
+                      .filter(([, response]) => response !== undefined)
+                      .map(([key, response]) => (
                       <div key={key} className="border border-gray-200 rounded-lg p-3">
                         <div className="flex items-center space-x-2 mb-2">
-                          {response.code >= 200 && response.code < 300 ? (
+                          {response!.code >= 200 && response!.code < 300 ? (
                             <CheckCircle className="h-4 w-4 text-green-600" />
-                          ) : response.code >= 400 && response.code < 500 ? (
+                          ) : response!.code >= 400 && response!.code < 500 ? (
                             <AlertTriangle className="h-4 w-4 text-yellow-600" />
-                          ) : response.code >= 500 ? (
+                          ) : response!.code >= 500 ? (
                             <XCircle className="h-4 w-4 text-red-600" />
                           ) : (
                             <Clock className="h-4 w-4 text-blue-600" />
                           )}
                           <span className="text-sm font-medium text-gray-900">
-                            {response.code} - {response.description}
+                            {response!.code} - {response!.description}
                           </span>
                         </div>
                         <div className="code-block">
-                          <pre className={`text-xs overflow-x-auto ${response.color}`}>
-                            <code>{response.example}</code>
+                          <pre className={`text-xs overflow-x-auto ${response!.color}`}>
+                            <code>{response!.example}</code>
                           </pre>
                         </div>
                       </div>
