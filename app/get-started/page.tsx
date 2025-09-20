@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { ArrowRight, CheckCircle, ExternalLink, Key, Shield, Zap } from 'lucide-react'
 import InteractiveArrow from '@/components/InteractiveArrow'
 
+
 const GetStartedPage = () => {
   const steps = [
     {
