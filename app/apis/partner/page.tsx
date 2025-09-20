@@ -197,31 +197,473 @@ const PartnerApiPage = () => {
           method: 'POST',
           path: '/transact',
           description: 'Process a unified transaction',
-          auth: 'API Key Required'
+          auth: 'API Key Required',
+          request: {
+            description: 'Transaction request payload',
+            example: `{
+  "mode": "WALLET_TO_WALLET",
+  "amount": 50000,
+  "currency": "UGX",
+  "description": "Payment for services",
+  "recipientUserId": "user_987654321",
+  "externalReference": "ref_123456789",
+  "metadata": {
+    "source": "mobile_app",
+    "version": "1.0.0"
+  }
+}`,
+            requiredFields: [
+              'mode',
+              'amount', 
+              'currency',
+              'description'
+            ],
+            optionalFields: [
+              'recipientUserId',
+              'phoneNumber',
+              'mnoProvider',
+              'externalReference',
+              'metadata'
+            ]
+          },
+          responses: {
+            success: {
+              code: 201,
+              description: 'Created',
+              example: `{
+  "success": true,
+  "data": {
+    "transactionId": "txn_abc123def456",
+    "userId": "user_xyz789",
+    "type": "TRANSFER",
+    "mode": "WALLET_TO_WALLET",
+    "amount": 50000,
+    "currency": "UGX",
+    "fee": 1500,
+    "netAmount": 48500,
+    "status": "COMPLETED",
+    "direction": "DEBIT",
+    "description": "Payment for services",
+    "recipientUserId": "user_987654321",
+    "createdAt": "2023-01-01T10:00:00Z",
+    "updatedAt": "2023-01-01T10:05:00Z"
+  }
+}`,
+              color: 'text-green-600'
+            },
+            pending: {
+              code: 201,
+              description: 'Created (Pending)',
+              example: `{
+  "success": true,
+  "data": {
+    "transactionId": "txn_abc123def456",
+    "userId": "user_xyz789",
+    "type": "TRANSFER",
+    "mode": "WALLET_TO_MNO",
+    "amount": 50000,
+    "currency": "UGX",
+    "fee": 2500,
+    "netAmount": 47500,
+    "status": "PENDING",
+    "direction": "DEBIT",
+    "description": "Mobile money transfer",
+    "phoneNumber": "+256700000001",
+    "mnoProvider": "MTN",
+    "createdAt": "2023-01-01T10:00:00Z",
+    "message": "Transaction is being processed"
+  }
+}`,
+              color: 'text-yellow-600'
+            },
+            insufficientFunds: {
+              code: 402,
+              description: 'Payment Required',
+              example: `{
+  "success": false,
+  "error": {
+    "code": 402,
+    "message": "Insufficient funds",
+    "details": "Wallet balance is insufficient for this transaction. Available: 30000 UGX, Required: 50000 UGX"
+  }
+}`,
+              color: 'text-red-600'
+            },
+            validationError: {
+              code: 422,
+              description: 'Unprocessable Entity',
+              example: `{
+  "success": false,
+  "error": {
+    "code": 422,
+    "message": "Transaction validation failed",
+    "details": [
+      {
+        "field": "amount",
+        "message": "Amount must be greater than 0"
+      },
+      {
+        "field": "phoneNumber",
+        "message": "Invalid phone number format for mobile money transaction"
+      }
+    ]
+  }
+}`,
+              color: 'text-red-600'
+            }
+          }
         },
         {
           method: 'GET',
           path: '/modes',
           description: 'Get available transaction modes',
-          auth: 'API Key Required'
+          auth: 'API Key Required',
+          responses: {
+            success: {
+              code: 200,
+              description: 'Success',
+              example: `{
+  "success": true,
+  "data": {
+    "modes": [
+      {
+        "mode": "WALLET_TO_WALLET",
+        "name": "Wallet to Wallet",
+        "description": "Transfer funds between Rukapay wallets",
+        "mandatoryFields": ["senderUserId", "recipientUserId", "amount", "currency"],
+        "optionalFields": ["description", "externalReference"],
+        "feeStructure": "Fixed: 1500 UGX"
+      },
+      {
+        "mode": "WALLET_TO_MNO",
+        "name": "Wallet to Mobile Money",
+        "description": "Send funds from wallet to mobile money accounts",
+        "mandatoryFields": ["userId", "amount", "phoneNumber", "mnoProvider"],
+        "optionalFields": ["description", "externalReference"],
+        "feeStructure": "Percentage: 2.5%"
+      },
+      {
+        "mode": "MNO_TO_WALLET",
+        "name": "Mobile Money to Wallet",
+        "description": "Top up wallet from mobile money",
+        "mandatoryFields": ["userId", "amount", "phoneNumber", "mnoProvider"],
+        "optionalFields": ["description", "externalReference"],
+        "feeStructure": "Free"
+      }
+    ],
+    "supportedProviders": ["MTN", "AIRTEL", "AFRICELL"],
+    "supportedCurrencies": ["UGX"]
+  }
+}`,
+              color: 'text-green-600'
+            },
+            unauthorized: {
+              code: 401,
+              description: 'Unauthorized',
+              example: `{
+  "success": false,
+  "error": {
+    "code": 401,
+    "message": "Invalid or missing API key",
+    "details": "Please provide a valid API key in the Authorization header"
+  }
+}`,
+              color: 'text-red-600'
+            }
+          }
         },
         {
           method: 'POST',
           path: '/preview-fees',
           description: 'Preview transaction fees before processing',
-          auth: 'API Key Required'
+          auth: 'API Key Required',
+          request: {
+            description: 'Fee preview request payload',
+            example: `{
+  "mode": "WALLET_TO_MNO",
+  "amount": 50000,
+  "currency": "UGX",
+  "phoneNumber": "+256700000001",
+  "mnoProvider": "MTN"
+}`,
+            requiredFields: [
+              'mode',
+              'amount',
+              'currency'
+            ],
+            optionalFields: [
+              'phoneNumber',
+              'mnoProvider',
+              'recipientUserId'
+            ]
+          },
+          responses: {
+            success: {
+              code: 200,
+              description: 'Success',
+              example: `{
+  "success": true,
+  "data": {
+    "transactionPreview": {
+      "mode": "WALLET_TO_MNO",
+      "amount": 50000,
+      "currency": "UGX",
+      "feeBreakdown": {
+        "baseFee": 1000,
+        "percentageFee": 1250,
+        "totalFee": 2250
+      },
+      "netAmount": 47750,
+      "recipientAmount": 50000,
+      "feeStructure": "2.5% + 1000 UGX",
+      "estimatedProcessingTime": "2-5 minutes"
+    },
+    "validated": true,
+    "warnings": []
+  }
+}`,
+              color: 'text-green-600'
+            },
+            validationError: {
+              code: 422,
+              description: 'Unprocessable Entity',
+              example: `{
+  "success": false,
+  "error": {
+    "code": 422,
+    "message": "Invalid transaction parameters",
+    "details": [
+      {
+        "field": "amount",
+        "message": "Amount must be between 1000 and 1000000 UGX"
+      },
+      {
+        "field": "mnoProvider",
+        "message": "Unsupported mobile money provider"
+      }
+    ]
+  }
+}`,
+              color: 'text-red-600'
+            },
+            unauthorized: {
+              code: 401,
+              description: 'Unauthorized',
+              example: `{
+  "success": false,
+  "error": {
+    "code": 401,
+    "message": "Invalid or missing API key",
+    "details": "Please provide a valid API key in the Authorization header"
+  }
+}`,
+              color: 'text-red-600'
+            }
+          }
         },
         {
           method: 'GET',
           path: '/my-transactions',
           description: 'Get user\'s transaction history',
-          auth: 'API Key Required'
+          auth: 'API Key Required',
+          responses: {
+            success: {
+              code: 200,
+              description: 'Success',
+              example: `{
+  "success": true,
+  "data": {
+    "transactions": [
+      {
+        "transactionId": "txn_abc123def456",
+        "type": "TRANSFER",
+        "mode": "WALLET_TO_WALLET",
+        "amount": 50000,
+        "currency": "UGX",
+        "fee": 1500,
+        "netAmount": 48500,
+        "status": "COMPLETED",
+        "direction": "DEBIT",
+        "description": "Payment for services",
+        "recipientUserId": "user_987654321",
+        "createdAt": "2023-01-01T10:00:00Z",
+        "updatedAt": "2023-01-01T10:05:00Z"
+      },
+      {
+        "transactionId": "txn_def456ghi789",
+        "type": "DEPOSIT",
+        "mode": "MNO_TO_WALLET",
+        "amount": 100000,
+        "currency": "UGX",
+        "fee": 0,
+        "netAmount": 100000,
+        "status": "COMPLETED",
+        "direction": "CREDIT",
+        "description": "Mobile money top-up",
+        "phoneNumber": "+256700000001",
+        "mnoProvider": "MTN",
+        "createdAt": "2023-01-01T09:30:00Z",
+        "updatedAt": "2023-01-01T09:35:00Z"
+      }
+    ],
+    "pagination": {
+      "page": 1,
+      "limit": 20,
+      "total": 45,
+      "totalPages": 3,
+      "hasNext": true,
+      "hasPrev": false
+    },
+    "summary": {
+      "totalTransactions": 45,
+      "totalVolume": 2500000,
+      "totalFees": 12500,
+      "netVolume": 2487500
+    }
+  }
+}`,
+              color: 'text-green-600'
+            },
+            unauthorized: {
+              code: 401,
+              description: 'Unauthorized',
+              example: `{
+  "success": false,
+  "error": {
+    "code": 401,
+    "message": "Invalid or missing API key",
+    "details": "Please provide a valid API key in the Authorization header"
+  }
+}`,
+              color: 'text-red-600'
+            },
+            badRequest: {
+              code: 400,
+              description: 'Bad Request',
+              example: `{
+  "success": false,
+  "error": {
+    "code": 400,
+    "message": "Invalid request parameters",
+    "details": "Invalid page parameter. Must be a positive integer"
+  }
+}`,
+              color: 'text-yellow-600'
+            }
+          }
         },
         {
           method: 'POST',
           path: '/validate',
           description: 'Validate transaction before processing',
-          auth: 'API Key Required'
+          auth: 'API Key Required',
+          request: {
+            description: 'Transaction validation request payload',
+            example: `{
+  "mode": "WALLET_TO_WALLET",
+  "amount": 50000,
+  "currency": "UGX",
+  "recipientUserId": "user_987654321",
+  "description": "Payment for services"
+}`,
+            requiredFields: [
+              'mode',
+              'amount',
+              'currency'
+            ],
+            optionalFields: [
+              'recipientUserId',
+              'phoneNumber',
+              'mnoProvider',
+              'description'
+            ]
+          },
+          responses: {
+            valid: {
+              code: 200,
+              description: 'Valid',
+              example: `{
+  "success": true,
+  "data": {
+    "valid": true,
+    "validationResults": {
+      "amount": {
+        "valid": true,
+        "message": "Amount is within acceptable range"
+      },
+      "recipient": {
+        "valid": true,
+        "message": "Recipient wallet exists and is active"
+      },
+      "balance": {
+        "valid": true,
+        "message": "Sufficient balance available",
+        "availableBalance": 150000,
+        "requiredAmount": 50000
+      },
+      "limits": {
+        "valid": true,
+        "message": "Transaction within daily limits"
+      }
+    },
+    "estimatedFee": 1500,
+    "netAmount": 48500,
+    "estimatedProcessingTime": "Instant"
+  }
+}`,
+              color: 'text-green-600'
+            },
+            invalid: {
+              code: 422,
+              description: 'Unprocessable Entity',
+              example: `{
+  "success": false,
+  "data": {
+    "valid": false,
+    "validationResults": {
+      "amount": {
+        "valid": false,
+        "message": "Amount exceeds maximum limit of 1000000 UGX"
+      },
+      "recipient": {
+        "valid": false,
+        "message": "Recipient wallet not found or inactive"
+      },
+      "balance": {
+        "valid": false,
+        "message": "Insufficient balance",
+        "availableBalance": 30000,
+        "requiredAmount": 50000
+      },
+      "limits": {
+        "valid": false,
+        "message": "Transaction exceeds daily limit of 500000 UGX"
+      }
+    },
+    "errors": [
+      "Amount exceeds maximum limit",
+      "Recipient wallet not found",
+      "Insufficient balance",
+      "Daily limit exceeded"
+    ]
+  }
+}`,
+              color: 'text-red-600'
+            },
+            unauthorized: {
+              code: 401,
+              description: 'Unauthorized',
+              example: `{
+  "success": false,
+  "error": {
+    "code": 401,
+    "message": "Invalid or missing API key",
+    "details": "Please provide a valid API key in the Authorization header"
+  }
+}`,
+              color: 'text-red-600'
+            }
+          }
         }
       ]
     },
@@ -234,19 +676,348 @@ const PartnerApiPage = () => {
           method: 'POST',
           path: '/',
           description: 'Create a new bulk transaction batch',
-          auth: 'API Key Required'
+          auth: 'API Key Required',
+          request: {
+            description: 'Bulk transaction batch creation payload',
+            example: `{
+  "mode": "WALLET_TO_MNO",
+  "currency": "UGX",
+  "description": "Monthly salary payments",
+  "batchReference": "salary_payment_2024_01",
+  "items": [
+    {
+      "itemId": "emp_001",
+      "amount": 500000,
+      "description": "Salary - John Doe",
+      "phoneNumber": "+256700000001",
+      "mnoProvider": "MTN",
+      "externalReference": "emp_001_jan_2024"
+    },
+    {
+      "itemId": "emp_002", 
+      "amount": 450000,
+      "description": "Salary - Jane Smith",
+      "phoneNumber": "+256700000002",
+      "mnoProvider": "AIRTEL",
+      "externalReference": "emp_002_jan_2024"
+    }
+  ]
+}`,
+            requiredFields: [
+              'mode',
+              'currency',
+              'description',
+              'items'
+            ],
+            optionalFields: [
+              'batchReference',
+              'metadata'
+            ]
+          },
+          responses: {
+            success: {
+              code: 201,
+              description: 'Created',
+              example: `{
+  "success": true,
+  "data": {
+    "batchId": "batch_abc123def456",
+    "userId": "user_xyz789",
+    "batchReference": "salary_payment_2024_01",
+    "mode": "WALLET_TO_MNO",
+    "currency": "UGX",
+    "description": "Monthly salary payments",
+    "status": "PROCESSING",
+    "totalItems": 25,
+    "totalAmount": 12500000,
+    "totalFees": 312500,
+    "netAmount": 12187500,
+    "processedItems": 0,
+    "failedItems": 0,
+    "pendingItems": 25,
+    "createdAt": "2023-01-01T10:00:00Z",
+    "estimatedCompletionTime": "2023-01-01T10:15:00Z",
+    "items": [
+      {
+        "itemId": "item_001",
+        "referenceId": "emp_001",
+        "amount": 500000,
+        "description": "Salary - John Doe",
+        "phoneNumber": "+256700000001",
+        "mnoProvider": "MTN",
+        "status": "PENDING"
+      }
+    ]
+  }
+}`,
+              color: 'text-green-600'
+            },
+            validationError: {
+              code: 422,
+              description: 'Unprocessable Entity',
+              example: `{
+  "success": false,
+  "error": {
+    "code": 422,
+    "message": "Bulk transaction validation failed",
+    "details": [
+      {
+        "itemIndex": 0,
+        "field": "amount",
+        "message": "Amount must be greater than 0"
+      },
+      {
+        "itemIndex": 1,
+        "field": "phoneNumber",
+        "message": "Invalid phone number format"
+      }
+    ],
+    "validItems": 23,
+    "invalidItems": 2
+  }
+}`,
+              color: 'text-red-600'
+            },
+            tooLarge: {
+              code: 413,
+              description: 'Payload Too Large',
+              example: `{
+  "success": false,
+  "error": {
+    "code": 413,
+    "message": "Batch size exceeds limit",
+    "details": "Maximum batch size is 100 items. Provided: 150 items"
+  }
+}`,
+              color: 'text-red-600'
+            },
+            unauthorized: {
+              code: 401,
+              description: 'Unauthorized',
+              example: `{
+  "success": false,
+  "error": {
+    "code": 401,
+    "message": "Invalid or missing API key",
+    "details": "Please provide a valid API key in the Authorization header"
+  }
+}`,
+              color: 'text-red-600'
+            }
+          }
         },
         {
           method: 'GET',
           path: '/:batchId/status',
           description: 'Get bulk transaction status',
-          auth: 'API Key Required'
+          auth: 'API Key Required',
+          responses: {
+            success: {
+              code: 200,
+              description: 'Success',
+              example: `{
+  "success": true,
+  "data": {
+    "batchId": "batch_abc123def456",
+    "userId": "user_xyz789",
+    "batchReference": "salary_payment_2024_01",
+    "mode": "WALLET_TO_MNO",
+    "currency": "UGX",
+    "description": "Monthly salary payments",
+    "status": "COMPLETED",
+    "totalItems": 25,
+    "totalAmount": 12500000,
+    "totalFees": 312500,
+    "netAmount": 12187500,
+    "processedItems": 25,
+    "failedItems": 0,
+    "pendingItems": 0,
+    "createdAt": "2023-01-01T10:00:00Z",
+    "completedAt": "2023-01-01T10:12:00Z",
+    "processingTime": "12 minutes",
+    "summary": {
+      "successRate": "100%",
+      "averageProcessingTime": "28 seconds",
+      "totalFeesPaid": 312500
+    },
+    "itemStatuses": [
+      {
+        "itemId": "item_001",
+        "referenceId": "emp_001",
+        "amount": 500000,
+        "status": "COMPLETED",
+        "transactionId": "txn_item001_abc123",
+        "processedAt": "2023-01-01T10:01:00Z"
+      }
+    ]
+  }
+}`,
+              color: 'text-green-600'
+            },
+            notFound: {
+              code: 404,
+              description: 'Not Found',
+              example: `{
+  "success": false,
+  "error": {
+    "code": 404,
+    "message": "Batch not found",
+    "details": "The specified batch ID does not exist or is not accessible"
+  }
+}`,
+              color: 'text-red-600'
+            },
+            unauthorized: {
+              code: 401,
+              description: 'Unauthorized',
+              example: `{
+  "success": false,
+  "error": {
+    "code": 401,
+    "message": "Invalid or missing API key",
+    "details": "Please provide a valid API key in the Authorization header"
+  }
+}`,
+              color: 'text-red-600'
+            }
+          }
         },
         {
           method: 'POST',
           path: '/validate',
           description: 'Validate bulk transaction batch',
-          auth: 'API Key Required'
+          auth: 'API Key Required',
+          request: {
+            description: 'Bulk transaction validation request payload',
+            example: `{
+  "mode": "WALLET_TO_MNO",
+  "currency": "UGX",
+  "description": "Monthly salary payments",
+  "items": [
+    {
+      "itemId": "emp_001",
+      "amount": 500000,
+      "phoneNumber": "+256700000001",
+      "mnoProvider": "MTN"
+    },
+    {
+      "itemId": "emp_002",
+      "amount": 450000,
+      "phoneNumber": "+256700000002",
+      "mnoProvider": "AIRTEL"
+    }
+  ]
+}`,
+            requiredFields: [
+              'mode',
+              'currency',
+              'items'
+            ],
+            optionalFields: [
+              'description',
+              'batchReference'
+            ]
+          },
+          responses: {
+            valid: {
+              code: 200,
+              description: 'Valid',
+              example: `{
+  "success": true,
+  "data": {
+    "valid": true,
+    "batchValidation": {
+      "totalItems": 25,
+      "validItems": 25,
+      "invalidItems": 0,
+      "totalAmount": 12500000,
+      "estimatedFees": 312500,
+      "netAmount": 12187500
+    },
+    "itemValidations": [
+      {
+        "itemIndex": 0,
+        "valid": true,
+        "amount": 500000,
+        "estimatedFee": 12500,
+        "netAmount": 487500,
+        "validationResults": {
+          "amount": "Valid",
+          "recipient": "Valid",
+          "phoneNumber": "Valid",
+          "mnoProvider": "Valid"
+        }
+      }
+    ],
+    "summary": {
+      "allItemsValid": true,
+      "estimatedProcessingTime": "10-15 minutes",
+      "recommendedBatchSize": "Optimal"
+    }
+  }
+}`,
+              color: 'text-green-600'
+            },
+            invalid: {
+              code: 422,
+              description: 'Unprocessable Entity',
+              example: `{
+  "success": false,
+  "data": {
+    "valid": false,
+    "batchValidation": {
+      "totalItems": 25,
+      "validItems": 20,
+      "invalidItems": 5,
+      "totalAmount": 10000000,
+      "estimatedFees": 250000,
+      "netAmount": 9750000
+    },
+    "itemValidations": [
+      {
+        "itemIndex": 0,
+        "valid": false,
+        "amount": 0,
+        "errors": [
+          "Amount must be greater than 0"
+        ]
+      },
+      {
+        "itemIndex": 1,
+        "valid": false,
+        "amount": 500000,
+        "errors": [
+          "Invalid phone number format",
+          "Unsupported mobile money provider"
+        ]
+      }
+    ],
+    "summary": {
+      "allItemsValid": false,
+      "validationErrors": [
+        "5 items have validation errors",
+        "Batch contains invalid phone numbers",
+        "Some amounts are invalid"
+      ]
+    }
+  }
+}`,
+              color: 'text-red-600'
+            },
+            unauthorized: {
+              code: 401,
+              description: 'Unauthorized',
+              example: `{
+  "success": false,
+  "error": {
+    "code": 401,
+    "message": "Invalid or missing API key",
+    "details": "Please provide a valid API key in the Authorization header"
+  }
+}`,
+              color: 'text-red-600'
+            }
+          }
         }
       ]
     }

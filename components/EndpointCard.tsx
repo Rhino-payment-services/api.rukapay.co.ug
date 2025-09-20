@@ -10,11 +10,19 @@ interface ResponseExample {
   color: string
 }
 
+interface RequestExample {
+  description: string
+  example: string
+  requiredFields: string[]
+  optionalFields: string[]
+}
+
 interface Method {
   method: string
   path: string
   description: string
   auth: string
+  request?: RequestExample
   responses?: {
     [key: string]: ResponseExample
   }
@@ -108,6 +116,43 @@ const EndpointCard = ({ title, description, baseUrl, methods }: EndpointCardProp
                 <span className="text-xs text-gray-500">Authentication:</span>
                 <span className="text-xs font-medium text-gray-700">{method.auth}</span>
               </div>
+
+              {/* Request Example */}
+              {method.request && (
+                <div className="mt-4">
+                  <h4 className="text-sm font-semibold text-gray-900 mb-3">Request Example</h4>
+                  <div className="border border-gray-200 rounded-lg p-3">
+                    <p className="text-xs text-gray-600 mb-2">{method.request.description}</p>
+                    <div className="code-block">
+                      <pre className="text-xs overflow-x-auto text-blue-600">
+                        <code>{method.request.example}</code>
+                      </pre>
+                    </div>
+                    <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div>
+                        <h5 className="text-xs font-medium text-gray-700 mb-1">Required Fields</h5>
+                        <div className="flex flex-wrap gap-1">
+                          {method.request.requiredFields.map((field, idx) => (
+                            <span key={idx} className="px-2 py-1 bg-red-100 text-red-800 text-xs rounded">
+                              {field}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                      <div>
+                        <h5 className="text-xs font-medium text-gray-700 mb-1">Optional Fields</h5>
+                        <div className="flex flex-wrap gap-1">
+                          {method.request.optionalFields.map((field, idx) => (
+                            <span key={idx} className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
+                              {field}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Response Examples */}
               {method.responses && (
