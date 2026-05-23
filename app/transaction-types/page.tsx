@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ArrowRight, CheckCircle, AlertTriangle, Clock } from 'lucide-react'
+import { ArrowRight, CheckCircle, AlertTriangle, Clock } from 'lucide-react';
 
 const TransactionTypesPage = () => {
   const transactionTypes = [
