@@ -11,8 +11,8 @@ export const metadata = { title: 'Transaction Status' }
 const toc = [
   { id: 'overview', title: 'Overview' },
   { id: 'statuses', title: 'Status values' },
-  { id: 'transactions-transactionIdOrReference-status', title: 'Get status' },
-  { id: 'process-transfer', title: 'Process transfer' },
+  { id: 'get-transactions-transactionIdOrReference-status', title: 'Get status' },
+  { id: 'post-process-transfer', title: 'Process transfer' },
 ]
 
 export default function TransactionStatusPage() {

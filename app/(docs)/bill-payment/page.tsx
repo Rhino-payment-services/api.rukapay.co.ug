@@ -6,9 +6,9 @@ export const metadata = { title: 'Bill Payment API' }
 
 const toc = [
   { id: 'overview', title: 'Overview' },
-  { id: 'process-transfer', title: 'Pay bill' },
-  { id: 'validate-beneficiary', title: 'Validate account' },
-  { id: 'transactions-transactionIdOrReference-status', title: 'Status' },
+  { id: 'post-process-transfer', title: 'Pay bill' },
+  { id: 'post-validate-beneficiary', title: 'Validate account' },
+  { id: 'get-transactions-transactionIdOrReference-status', title: 'Status' },
 ]
 
 const billExample = {

@@ -26,6 +26,16 @@ export const docsNavigation: NavItem[] = [
     ],
   },
   {
+    title: 'Partner - Institutions',
+    items: [
+      { title: 'Overview', href: '/partner-institutions' },
+      { title: 'Onboarding', href: '/partner-institutions/onboarding' },
+      { title: 'Members', href: '/partner-institutions/members' },
+      { title: 'Staff', href: '/partner-institutions/staff' },
+      { title: 'Transactions', href: '/partner-institutions/transactions' },
+    ],
+  },
+  {
     title: 'Operations',
     items: [
       { title: 'Transaction Status', href: '/transaction-status' },

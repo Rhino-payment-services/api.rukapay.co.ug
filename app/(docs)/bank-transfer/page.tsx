@@ -6,9 +6,9 @@ export const metadata = { title: 'Bank Transfer API' }
 
 const toc = [
   { id: 'overview', title: 'Overview' },
-  { id: 'process-transfer', title: 'Bank send' },
-  { id: 'validate-beneficiary', title: 'Validate account' },
-  { id: 'transactions-transactionIdOrReference-status', title: 'Status' },
+  { id: 'post-process-transfer', title: 'Bank send' },
+  { id: 'post-validate-beneficiary', title: 'Validate account' },
+  { id: 'get-transactions-transactionIdOrReference-status', title: 'Status' },
 ]
 
 const bankExample = {

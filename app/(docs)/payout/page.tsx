@@ -7,9 +7,9 @@ export const metadata = { title: 'Payout API' }
 
 const toc = [
   { id: 'overview', title: 'Overview' },
-  { id: 'process-transfer', title: 'Payout (process-transfer)' },
-  { id: 'validate-beneficiary', title: 'Validate beneficiary' },
-  { id: 'transactions-transactionIdOrReference-status', title: 'Status' },
+  { id: 'post-process-transfer', title: 'Payout (process-transfer)' },
+  { id: 'post-validate-beneficiary', title: 'Validate beneficiary' },
+  { id: 'get-transactions-transactionIdOrReference-status', title: 'Status' },
 ]
 
 export default function PayoutPage() {
