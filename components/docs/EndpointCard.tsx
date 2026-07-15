@@ -19,6 +19,8 @@ export type EndpointDefinition = {
   path: string
   title: string
   description: string
+  /** Defaults to Gateway full URL when omitted */
+  baseUrl?: string
   pathParams?: Parameter[]
   queryParams?: Parameter[]
   bodyParams?: Parameter[]
@@ -30,7 +32,7 @@ export type EndpointDefinition = {
 export function EndpointCard({ endpoint }: { endpoint: EndpointDefinition }) {
   const [expanded, setExpanded] = useState(true)
   const [copied, setCopied] = useState(false)
-  const fullPath = `${GATEWAY_FULL_URL}${endpoint.path}`
+  const fullPath = `${endpoint.baseUrl ?? GATEWAY_FULL_URL}${endpoint.path}`
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(`${endpoint.method} ${fullPath}`)
@@ -40,7 +42,7 @@ export function EndpointCard({ endpoint }: { endpoint: EndpointDefinition }) {
 
   return (
     <section
-      id={endpoint.path.replace(/\//g, '-').replace(/^-/, '')}
+      id={`${endpoint.method.toLowerCase()}${endpoint.path.replace(/\//g, '-').replace(/[{}]/g, '')}`}
       className="scroll-mt-28 overflow-hidden rounded-xl border border-border bg-surface-elevated"
     >
       <button

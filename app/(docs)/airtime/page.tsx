@@ -6,9 +6,9 @@ export const metadata = { title: 'Airtime API' }
 
 const toc = [
   { id: 'overview', title: 'Overview' },
-  { id: 'process-transfer', title: 'Purchase airtime' },
-  { id: 'validate-beneficiary', title: 'Validate number' },
-  { id: 'transactions-transactionIdOrReference-status', title: 'Status' },
+  { id: 'post-process-transfer', title: 'Purchase airtime' },
+  { id: 'post-validate-beneficiary', title: 'Validate number' },
+  { id: 'get-transactions-transactionIdOrReference-status', title: 'Status' },
 ]
 
 const airtimeExample = {

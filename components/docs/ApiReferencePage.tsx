@@ -15,6 +15,8 @@ type ApiReferencePageProps = {
   endpoints: EndpointDefinition[]
   codeSnippets?: Partial<Record<CodeLanguage, string>>
   defaultLanguage?: CodeLanguage
+  /** Gateway sandbox notice — hide for non-Gateway APIs */
+  showSandboxNotice?: boolean
   extraSections?: {
     id: string
     title: string
@@ -31,6 +33,7 @@ export function ApiReferencePage({
   endpoints,
   codeSnippets,
   defaultLanguage = 'curl',
+  showSandboxNotice = true,
   extraSections,
 }: ApiReferencePageProps) {
   return (
@@ -46,7 +49,7 @@ export function ApiReferencePage({
           </p>
         </header>
 
-        <SandboxDevNotice compact />
+        {showSandboxNotice && <SandboxDevNotice compact />}
 
         <section id="overview" className="docs-prose mb-12 scroll-mt-28">
           {overview}
@@ -68,7 +71,7 @@ export function ApiReferencePage({
         {endpoints.map((endpoint) => (
           <section
             key={endpoint.path + endpoint.method}
-            id={endpoint.path.replace(/\//g, '-').replace(/^-/, '')}
+            id={`${endpoint.method.toLowerCase()}${endpoint.path.replace(/\//g, '-').replace(/[{}]/g, '')}`}
             className="mb-10 scroll-mt-28 space-y-4"
           >
             <EndpointCard endpoint={endpoint} />
