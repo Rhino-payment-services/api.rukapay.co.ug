@@ -9,6 +9,12 @@ import {
   GATEWAY_ERROR_CODES,
   MNO_PROVIDERS,
 } from './gateway-api'
+import {
+  BILL_PAYMENT_FIELDS,
+  VALIDATE_BILL_FIELDS,
+  VALIDATE_RESPONSE_UMEME,
+  BILLER_EXAMPLES,
+} from './bill-payment-api'
 
 export const transactionStatuses = [
   { status: 'SUCCESS', description: 'Transaction completed successfully.' },
@@ -20,7 +26,7 @@ export const transactionStatuses = [
 export const providers = {
   mobileMoney: [...MNO_PROVIDERS],
   banks: ['STANBIC', 'DFCU', 'EQUITY', 'CENTENARY', 'ABSA'],
-  bills: ['NWSC', 'UMEME', 'DSTV', 'GOTV', 'STARTIMES'],
+  bills: ['NWSC', 'UMEME', 'URA', 'DSTV', 'GOTV', 'STARTIMES'],
   airtime: [...MNO_PROVIDERS],
 }
 
@@ -206,12 +212,9 @@ export const billPaymentEndpoints: EndpointDefinition[] = [
     method: 'POST',
     path: processTransferPath,
     title: 'Pay bill',
-    description: `Use transactionMode ${TRANSACTION_MODES.PARTNER_PAY_BILL_PAYMENT.code}. Supports billers such as NWSC, UMEME, DSTV.`,
-    bodyParams: TRANSFER_REQUEST_FIELDS,
-    requestBody: modeBody(TRANSACTION_MODES.PARTNER_PAY_BILL_PAYMENT.code, {
-      billerCode: 'NWSC',
-      accountNumber: '04151234567',
-    }),
+    description: `Use transactionMode ${TRANSACTION_MODES.PARTNER_PAY_BILL_PAYMENT.code}. Call validate-beneficiary first, then send customerName, phoneNumber, and biller-specific fields on pay.`,
+    bodyParams: BILL_PAYMENT_FIELDS,
+    requestBody: JSON.stringify(BILLER_EXAMPLES.UMEME.pay, null, 2),
     responseBody: TRANSFER_RESPONSE_EXAMPLE,
     statusCodes: [{ code: 200, label: 'OK', description: 'Bill payment processed or pending.' }],
   },
@@ -219,20 +222,11 @@ export const billPaymentEndpoints: EndpointDefinition[] = [
     method: 'POST',
     path: validatePath,
     title: 'Validate bill account',
-    description: 'Validate biller account before payment using PARTNER_PAY_BILL_PAYMENT mode with billerCode and accountNumber.',
-    bodyParams: [
-      { name: 'transactionMode', type: 'string', required: true, description: 'PARTNER_PAY_BILL_PAYMENT' },
-      { name: 'billerCode', type: 'string', required: true, description: 'e.g. NWSC, UMEME' },
-      { name: 'accountNumber', type: 'string', required: true, description: 'Customer account or meter number.' },
-    ],
-    requestBody: modeBody(TRANSACTION_MODES.PARTNER_PAY_BILL_PAYMENT.code, {
-      billerCode: 'NWSC',
-      accountNumber: '04151234567',
-    }),
-    responseBody: `{
-  "success": true,
-  "beneficiary": { "name": "Jane Customer", "accountNumber": "04151234567", "provider": "NWSC", "isValid": true }
-}`,
+    description:
+      'Validate biller account before payment. Echo beneficiary.name as customerName and beneficiary.customerType or area on process-transfer.',
+    bodyParams: VALIDATE_BILL_FIELDS,
+    requestBody: JSON.stringify(BILLER_EXAMPLES.UMEME.validate, null, 2),
+    responseBody: VALIDATE_RESPONSE_UMEME,
     statusCodes: [{ code: 200, label: 'OK', description: 'Account validated.' }],
   },
   transactionStatusEndpoint,

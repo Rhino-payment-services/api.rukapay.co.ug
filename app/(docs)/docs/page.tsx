@@ -93,7 +93,7 @@ export default function DocsHomePage() {
           />
           <PaymentModuleCard
             title="Bill Payment"
-            description="PARTNER_PAY_BILL_PAYMENT — NWSC, UMEME, TV, and more."
+            description="PARTNER_PAY_BILL_PAYMENT — NWSC, UMEME, URA, TV, and more."
             href="/bill-payment"
             icon={Receipt}
             providers={providers.bills.slice(0, 3)}
