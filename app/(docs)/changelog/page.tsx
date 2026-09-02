@@ -4,6 +4,15 @@ export const metadata = { title: 'Changelog' }
 
 const releases = [
   {
+    version: 'v2.2',
+    date: '2026-09-02',
+    items: [
+      'Per-biller bill payment examples for UMEME, NWSC, URA, DSTV, GOTV, and STARTIMES',
+      'Documented required pay fields: customerName, phoneNumber, customerType (UMEME), area (NWSC)',
+      'Added supported billers reference table with sandbox test accounts',
+    ],
+  },
+  {
     version: 'v2.1',
     date: '2026-05-01',
     items: [

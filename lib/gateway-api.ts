@@ -125,7 +125,10 @@ export const TRANSFER_REQUEST_FIELDS = [
   { name: 'bankCode', type: 'string', required: false, description: 'Bank code e.g. STANBIC (bank send).' },
   { name: 'accountName', type: 'string', required: false, description: 'Account holder name (bank send).' },
   { name: 'recipientName', type: 'string', required: false, description: 'Recipient name (MNO send).' },
-  { name: 'billerCode', type: 'string', required: false, description: 'Biller code e.g. NWSC, UMEME (bill payment).' },
+  { name: 'customerName', type: 'string', required: false, description: 'Account holder name (bill payment). Use beneficiary.name from validate. Aliases: accountName, recipientName.' },
+  { name: 'customerType', type: 'string', required: false, description: 'UMEME/YAKALAST bill payment: PREPAID or POSTPAID from validate. Aliases: area, meterNumber.' },
+  { name: 'area', type: 'string', required: false, description: 'NWSC bill payment: service area e.g. Kampala. Aliases: customerType, meterNumber.' },
+  { name: 'billerCode', type: 'string', required: false, description: 'Biller code for PARTNER_PAY_BILL_PAYMENT: NWSC, UMEME, URA, DSTV, GOTV, STARTIMES. Alias: biller_code.' },
   { name: 'callbackUrl', type: 'string', required: false, description: 'Webhook URL. Required for PARTNER_COLLECT_MNO.' },
   { name: 'metadata', type: 'object', required: false, description: 'Custom data returned in partner callback.' },
 ]

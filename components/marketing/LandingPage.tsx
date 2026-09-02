@@ -45,7 +45,7 @@ const capabilities = [
   {
     icon: Receipt,
     title: 'Bill payments',
-    description: 'Pay utilities and subscriptions — NWSC, UMEME, TV, and more through one API.',
+    description: 'Pay utilities and subscriptions — NWSC, UMEME, URA, TV, and more through one API.',
     href: '/bill-payment',
     mode: TRANSACTION_MODES.PARTNER_PAY_BILL_PAYMENT.code,
   },

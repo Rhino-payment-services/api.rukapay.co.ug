@@ -209,7 +209,8 @@ export const memberEndpoints: EndpointDefinition[] = [
     method: 'PATCH',
     ...hostBase('/partner-institutions/{institutionId}/users/{memberId}'),
     title: 'Update member',
-    description: 'Update display name, email, account, or status. Legal names cannot change.',
+    description:
+      'Update display name, email, account, status, and profile details (dateOfBirth, gender, nationalId, address, city). Legal first/last names cannot change.',
     pathParams: [
       { name: 'institutionId', type: 'string', required: true, description: 'SACCO id.' },
       { name: 'memberId', type: 'string', required: true, description: 'Member id.' },
@@ -220,11 +221,22 @@ export const memberEndpoints: EndpointDefinition[] = [
       { name: 'accountNo', type: 'string', required: false, description: 'Account number.' },
       { name: 'clientId', type: 'string', required: false, description: 'Client id.' },
       { name: 'status', type: 'string', required: false, description: 'e.g. ACTIVE.' },
+      { name: 'dateOfBirth', type: 'string', required: false, description: 'ISO date YYYY-MM-DD.' },
+      { name: 'gender', type: 'string', required: false, description: 'MALE | FEMALE | OTHER.' },
+      { name: 'nationalId', type: 'string', required: false, description: 'Uganda NIN. Empty string clears.' },
+      { name: 'nationalIdNotApplicable', type: 'boolean', required: false, description: 'Set true to clear NIN.' },
+      { name: 'address', type: 'string', required: false, description: 'Physical address.' },
+      { name: 'city', type: 'string', required: false, description: 'City.' },
     ],
     requestBody: `{
   "displayName": "John D.",
   "accountNo": "AC001",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "dateOfBirth": "1990-01-15",
+  "gender": "MALE",
+  "nationalId": "CM92123405678AB",
+  "address": "Plot 12 Namasuba",
+  "city": "Kampala"
 }`,
     statusCodes: authCodes.filter((c) => c.code !== 201),
   },
@@ -253,7 +265,8 @@ export const memberEndpoints: EndpointDefinition[] = [
     method: 'GET',
     ...hostBase('/partner-institutions/users/template'),
     title: 'Download Excel template',
-    description: 'Empty template for bulk member upload.',
+    description:
+      'Downloads sacco-users-template.xlsx with all bulk-import columns (firstName, lastName, displayName, phone, email, nationalId, nationalIdNotApplicable, accountNo, clientId, status, isVerified, acknowledgePhoneNameMismatch).',
     statusCodes: [{ code: 200, label: 'OK', description: 'xlsx file returned.' }],
   },
 ]
@@ -451,7 +464,7 @@ export const transactionEndpoints: EndpointDefinition[] = [
     ...hostBase('/partner-institutions/{institutionId}/transactions'),
     title: 'Execute transaction',
     description:
-      'One endpoint for deposits, withdrawals, shares, loans, member transfers, and liquidation. Set type.',
+      'One endpoint for deposits, withdrawals, shares, loans, member transfers, and liquidation. Set type. MNO PIN for member collections (DEPOSIT, LOAN_REPAYMENT, PURCHASE_SHARES) is bypassed when the API server NODE_ENV is development/dev/test/sandbox. Production NODE_ENV always uses the real MNO prompt.',
     pathParams: [
       { name: 'institutionId', type: 'string', required: true, description: 'SACCO id.' },
     ],
@@ -485,8 +498,9 @@ export const transactionEndpoints: EndpointDefinition[] = [
     "transactionId": "txn_abc123",
     "type": "DEPOSIT",
     "amount": 50000,
-    "status": "PENDING",
-    "partnerReference": "DEP-001"
+    "status": "SUCCESS",
+    "partnerReference": "DEP-001",
+    "mnoConfirmationBypassed": true
   }
 }`,
     statusCodes: authCodes.filter((c) => c.code !== 201),
@@ -495,7 +509,8 @@ export const transactionEndpoints: EndpointDefinition[] = [
     method: 'POST',
     ...hostBase('/partner-institutions/{institutionId}/transactions/bulk'),
     title: 'Bulk transactions',
-    description: 'Process many items in one request. Each item succeeds or fails independently.',
+    description:
+      'Process many items in one request. Each item succeeds or fails independently. Member MNO PIN bypass follows server NODE_ENV (same as single execute).',
     pathParams: [
       { name: 'institutionId', type: 'string', required: true, description: 'SACCO id.' },
     ],
